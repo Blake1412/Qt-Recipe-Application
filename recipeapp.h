@@ -22,6 +22,6 @@ private slots:
 
 private:
     Ui::RecipeApp *ui;
-    vector<int> previousPages;
+    QVector<int> previousPages;
 };
 #endif // RECIPEAPP_H

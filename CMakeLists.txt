@@ -17,6 +17,8 @@ set(PROJECT_SOURCES
         recipeapp.cpp
         recipeapp.h
         recipeapp.ui
+        recipe.h
+        recipe.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

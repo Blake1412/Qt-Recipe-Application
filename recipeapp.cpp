@@ -1,7 +1,7 @@
 #include "recipeapp.h"
 #include "ui_recipeapp.h"
 
-RecipeApp::RecipeApp(QWidget *parent): QMainWindow(parent), ui(new Ui::RecipeApp), previousPages(vector<int>{}) {
+RecipeApp::RecipeApp(QWidget *parent): QMainWindow(parent), ui(new Ui::RecipeApp), previousPages(QVector<int>{}) {
     ui->setupUi(this);
     connect(ui->pageSelectionButtons, SIGNAL(idClicked(int)), this, SLOT(pageSelectionButtonClicked(int)));
     connect(ui->backButton, SIGNAL(clicked()), this, SLOT(backButtonClicked()));
