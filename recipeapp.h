@@ -1,6 +1,8 @@
 #ifndef RECIPEAPP_H
 #define RECIPEAPP_H
 
+#include "recipe.h"
+
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -19,6 +21,7 @@ public:
 private slots:
     void pageSelectionButtonClicked(int index);
     void backButtonClicked();
+    void recipeButtonClicked();
 
 private:
     Ui::RecipeApp *ui;

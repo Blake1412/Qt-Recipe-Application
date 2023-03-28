@@ -19,6 +19,9 @@ set(PROJECT_SOURCES
         recipeapp.ui
         recipe.h
         recipe.cpp
+        recipebutton.h
+        recipebutton.cpp
+        recipebutton.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

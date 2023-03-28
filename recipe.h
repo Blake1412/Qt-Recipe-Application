@@ -4,31 +4,24 @@
 #include <QString>
 #include <QVector>
 
-struct Allergen {
-    bool crustacean : 1;
-    bool eggs : 1;
-    bool fish : 1;
-    bool milk : 1;
-    bool peanuts : 1;
-    bool soybeans : 1;
-    bool treeNuts : 1;
-    bool wheat : 1;
-};
+using std::ostream;
 
 class Recipe {
 public:
-    Recipe(const QString &name, const QVector<QString> &ingredients, const QVector<QString> &instructions, const Allergen &allergens, const QString &dietRestriction);
+    Recipe(const QString &name, const QVector<QString> &ingredients, const QVector<QString> &instructions, const QVector<QString> &allergens, const QString &dietRestriction);
+    Recipe(const QString &name, const QVector<QString> &ingredients, const QVector<QString> &instructions, const QString &dietRestriction);
     QString getName() const;
     QVector<QString> getIngredients() const;
     QVector<QString> getInstructions() const;
-    Allergen getAllergens() const;
+    QVector<QString> getAllergens() const;
     QString getDietRestriction() const;
+    QString getAllergensString() const;
 
 private:
     QString name;
     QVector<QString> ingredients;
     QVector<QString> instructions;
-    Allergen allergens;
+    QVector<QString> allergens;
     QString dietRestriction;
 };
 
