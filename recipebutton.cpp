@@ -5,7 +5,7 @@ RecipeButton::RecipeButton(const Recipe &recipe, QWidget *parent): recipe(recipe
     ui->setupUi(this);
     connect(ui->selectRecipeButton, SIGNAL(clicked()), this, SIGNAL(selectRecipeButtonClicked()));
     ui->recipeNameLabel->setText(recipe.name);
-    ui->allergensLabel->setText(recipe.getAllergensString());
+    ui->allergensLabel->setText(recipe.allergens.string());
     ui->dietaryRestrictionsLabel->setText(recipe.dietRestriction);
 }
 

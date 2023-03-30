@@ -48,7 +48,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="homePage">
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -130,6 +130,19 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
+            <widget class="QRadioButton" name="radioButton">
+             <property name="text">
+              <string>All</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+             <attribute name="buttonGroup">
+              <string notr="true">dietaryRestrictionButtons</string>
+             </attribute>
+            </widget>
+           </item>
+           <item>
             <widget class="QRadioButton" name="carnivorousButton">
              <property name="text">
               <string>Carnivorous</string>
@@ -145,7 +158,7 @@
               <string>Omnivorous</string>
              </property>
              <property name="checked">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <attribute name="buttonGroup">
               <string notr="true">dietaryRestrictionButtons</string>
@@ -294,7 +307,7 @@
              <x>0</x>
              <y>0</y>
              <width>626</width>
-             <height>414</height>
+             <height>442</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -380,8 +393,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>377</width>
-             <height>389</height>
+             <width>40</width>
+             <height>20</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -422,8 +435,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>377</width>
-             <height>389</height>
+             <width>40</width>
+             <height>20</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -637,8 +650,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>309</width>
-             <height>427</height>
+             <width>109</width>
+             <height>93</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_20">
@@ -685,8 +698,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>309</width>
-             <height>427</height>
+             <width>106</width>
+             <height>93</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_21">
@@ -758,17 +771,17 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="dietaryRestrictionButtons"/>
-  <buttongroup name="allergenButtons">
-   <property name="exclusive">
-    <bool>false</bool>
-   </property>
-  </buttongroup>
   <buttongroup name="pageSelectionButtons">
    <property name="exclusive">
     <bool>false</bool>
    </property>
   </buttongroup>
+  <buttongroup name="dietaryRestrictionButtons"/>
   <buttongroup name="dietaryRestrictionCreateButtons"/>
+  <buttongroup name="allergenButtons">
+   <property name="exclusive">
+    <bool>false</bool>
+   </property>
+  </buttongroup>
  </buttongroups>
 </ui>

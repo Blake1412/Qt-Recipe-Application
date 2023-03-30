@@ -1,5 +1,4 @@
 #include "recipe.h"
-#include "qdebug.h"
 
 #include <sstream>
 #include <QJsonObject>
@@ -7,8 +6,17 @@
 
 using std::stringstream;
 
-QDebug operator<< (QDebug debug, const Recipe &recipe) {
-    return debug << recipe.name << Qt::endl << recipe.dietRestriction << " | " << recipe.getAllergensString() << Qt::endl;;
+bool const Recipe::operator== (const Recipe &recipe) {
+    return recipe.name == name &&
+           recipe.ingredients == ingredients &&
+           recipe.instructions == instructions &&
+           recipe.allergens.getAllergens().bits == allergens.getAllergens().bits &&
+           recipe.dietRestriction == dietRestriction;
+}
+
+
+QDebug operator<< (QDebug &debug, const Recipe &recipe) {
+    return debug << recipe.name << Qt::endl << recipe.dietRestriction << " | " << recipe.allergens.string() << Qt::endl;;
 }
 
 QJsonObject operator<< (QJsonObject &jsonObject, const Recipe &recipe) {
@@ -17,16 +25,16 @@ QJsonObject operator<< (QJsonObject &jsonObject, const Recipe &recipe) {
     QJsonArray instructions;
     QJsonArray allergens;
 
-    for (QString const &ingredient : recipe.ingredients) {
+    for (auto &ingredient : recipe.ingredients) {
         ingredients.append(ingredient);
     }
 
-    for (QString const &instruction : recipe.instructions) {
+    for (auto &instruction : recipe.instructions) {
         instructions.append(instruction);
     }
 
-    for (QString const &allergen : recipe.allergens) {
-        allergens.append(allergen);
+    if (recipe.allergens.string() != "") {
+        allergens = QJsonArray::fromStringList(recipe.allergens.string().right(recipe.allergens.string().size() - recipe.allergens.string().indexOf(":") - 2).split(", ", Qt::SkipEmptyParts));
     }
 
     jsonRecipe.insert("Ingredients", ingredients);
@@ -42,12 +50,7 @@ Recipe::Recipe(){
 
 }
 
-Recipe::Recipe(const QString &name, const QVector<QString> &ingredients, const QVector<QString> &instructions, const QString &dietRestriction)
-    : name(name), ingredients(ingredients), instructions(instructions), dietRestriction(dietRestriction) {
-
-}
-
-Recipe::Recipe(const QString &name, const QVector<QString> &ingredients, const QVector<QString> &instructions, const QVector<QString> &allergens, const QString &dietRestriction)
+Recipe::Recipe(const QString &name, const QVector<QString> &ingredients, const QVector<QString> &instructions, const Allergen &allergens, const QString &dietRestriction)
     : name(name), ingredients(ingredients), instructions(instructions), allergens(allergens), dietRestriction(dietRestriction) {
 
 }
@@ -64,24 +67,12 @@ QVector<QString> Recipe::getInstructions() const {
     return instructions;
 }
 
-QVector<QString> Recipe::getAllergens() const {
+Allergen Recipe::getAllergens() const {
     return allergens;
 }
 
 QString Recipe::getDietRestriction() const {
     return dietRestriction;
-}
-
-QString Recipe::getAllergensString() const{
-    stringstream os;
-    if (!allergens.isEmpty()) {
-    os << "Contains: ";
-    for (int i = 0; i < allergens.length() - 1; i++) {
-        os << allergens[i].toStdString() << ", ";
-    }
-    os << allergens.back().toStdString();
-    }
-    return  QString::fromStdString(os.str());
 }
 
 void Recipe::setName(const QString &newName) {
@@ -97,7 +88,7 @@ void Recipe::addInstruction(const QString &instruction) {
 }
 
 void Recipe::addAllergen(const QString &allergen) {
-    allergens.append(allergen);
+    allergens.addAllergen(allergen);
 }
 
 void Recipe::setDietRestriction(const QString &newDietRestriction) {

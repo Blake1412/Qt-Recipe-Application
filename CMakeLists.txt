@@ -22,6 +22,8 @@ set(PROJECT_SOURCES
         recipebutton.h
         recipebutton.cpp
         recipebutton.ui
+        allergen.h
+        allergen.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
