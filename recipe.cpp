@@ -53,6 +53,18 @@ Recipe::Recipe(const QString &name, const QVector<QString> &ingredients, const Q
 
 }
 
+Recipe::Recipe(const Recipe &recipe, Deep): Recipe(recipe) {
+    name.detach();
+    ingredients.detach();
+    instructions.detach();
+    dietRestriction.detach();
+}
+
+Recipe::Recipe(const Recipe &recipe)
+    : name(recipe.name), ingredients(recipe.ingredients), instructions(recipe.instructions), allergens(recipe.allergens), dietRestriction(recipe.dietRestriction) {
+
+}
+
 const QString& Recipe::getName() const {
     return name;
 }

@@ -11,8 +11,12 @@ class RecipeButton;
 class Recipe {
 
 public:
+    enum Deep { deep };
+
     Recipe();
     Recipe(const QString &name, const QVector<QString> &ingredients, const QVector<QString> &instructions, const Allergen &allergens, const QString &dietRestriction);
+    Recipe(const Recipe &recipe, Deep);
+    Recipe(const Recipe &recipe);
 
     const QString& getName() const;
     const QVector<QString>& getIngredients() const;

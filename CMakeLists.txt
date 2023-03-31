@@ -24,6 +24,8 @@ set(PROJECT_SOURCES
         recipebutton.ui
         allergen.h
         allergen.cpp
+        duplicaterecipeexception.h
+        duplicaterecipeexception.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

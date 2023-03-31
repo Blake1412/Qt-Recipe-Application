@@ -21,6 +21,7 @@ class RecipeApp : public QMainWindow {
 public:
     RecipeApp(QWidget *parent = nullptr);
     ~RecipeApp();
+    void addRecipe(const Recipe &recipe);
 
 private slots:
     void pageSelectionButtonClicked(int index);

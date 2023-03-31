@@ -1,3 +1,4 @@
+#include "duplicaterecipeexception.h"
 #include "recipe.h"
 #include "recipeapp.h"
 #include "recipebutton.h"
@@ -121,10 +122,21 @@ void RecipeApp::on_createRecipeButton_clicked() {
 
     Recipe recipe(ui->recipeNameCreateLabel->text(), ingredients, instructions, allergens, ui->dietaryRestrictionCreateButtons->checkedButton()->text());
     ui->recipeNameCreateLabel->setText("");
-    recipes.append(recipe);
+
+    try {
+    addRecipe(recipe);
+    } catch (DuplicateRecipeException ex) {
+        qDebug() << ex.message();
+    }
+
     displayRecipes();
 
     recipesJson << recipe;
+}
+
+void RecipeApp::addRecipe(const Recipe& recipe) {
+    if (recipes.contains(recipe)) throw DuplicateRecipeException(recipe.getName());
+    else recipes.append(recipe);
 }
 
 void RecipeApp::loadRecipes() {
@@ -145,13 +157,13 @@ void RecipeApp::loadRecipes() {
             newRecipe.addAllergen(allergen.toString());
         }
         newRecipe.setDietRestriction(recipe.find("Dietary Restriction").value().toString());
-        RecipeApp::recipes.append(newRecipe);
+        addRecipe(newRecipe);
     }
     displayRecipes();
 }
 
 void RecipeApp::displayRecipes() {
-    for (Recipe &recipe: recipes) {
+    for (auto &recipe: recipes) {
         if ((dietRestriction == "All" || dietRestriction == recipe.getDietRestriction()) &&
             (searchText == "" || recipe.getName().contains(searchText, Qt::CaseInsensitive)) &&
             (!allergens.getAllergens().bits || !(allergens.getAllergens().bits & recipe.getAllergens().getAllergens().bits))) {
