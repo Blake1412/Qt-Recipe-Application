@@ -8,11 +8,11 @@ Allergen::Allergen() {
     allergens.bits = 0;
 }
 
-AllergenBitStruct Allergen::getAllergens() const {
+const AllergenBitStruct& Allergen::getAllergens() const {
     return allergens;
 }
 
-void Allergen::addAllergen(const QString allergen) {
+void Allergen::addAllergen(const QString& allergen) {
     if (allergen == "Crustaceans") allergens.allergens.crustaceans = 1;
     if (allergen == "Eggs") allergens.allergens.eggs = 1;
     if (allergen == "Fish") allergens.allergens.fish = 1;
@@ -23,7 +23,7 @@ void Allergen::addAllergen(const QString allergen) {
     if (allergen == "Wheat") allergens.allergens.wheat = 1;
 }
 
-void Allergen::removeAllergen(const QString allergen) {
+void Allergen::removeAllergen(const QString& allergen) {
     if (allergen == "Crustaceans") allergens.allergens.crustaceans = 0;
     if (allergen == "Eggs") allergens.allergens.eggs = 0;
     if (allergen == "Fish") allergens.allergens.fish = 0;

@@ -6,7 +6,7 @@
 
 using std::stringstream;
 
-bool const Recipe::operator== (const Recipe &recipe) {
+bool const Recipe::operator== (const Recipe &recipe) const {
     return recipe.name == name &&
            recipe.ingredients == ingredients &&
            recipe.instructions == instructions &&
@@ -19,7 +19,7 @@ QDebug operator<< (QDebug &debug, const Recipe &recipe) {
     return debug << recipe.name << Qt::endl << recipe.dietRestriction << " | " << recipe.allergens.string() << Qt::endl;;
 }
 
-QJsonObject operator<< (QJsonObject &jsonObject, const Recipe &recipe) {
+void operator<< (QJsonObject &jsonObject, const Recipe &recipe) {
     QJsonObject jsonRecipe;
     QJsonArray ingredients;
     QJsonArray instructions;
@@ -42,8 +42,6 @@ QJsonObject operator<< (QJsonObject &jsonObject, const Recipe &recipe) {
     jsonRecipe.insert("Allergens", allergens);
     jsonRecipe.insert("Dietary Restriction", recipe.dietRestriction);
     jsonObject.insert(recipe.name, jsonRecipe);
-
-    return jsonObject;
 }
 
 Recipe::Recipe(){
@@ -55,28 +53,32 @@ Recipe::Recipe(const QString &name, const QVector<QString> &ingredients, const Q
 
 }
 
-QString Recipe::getName() const {
+const QString& Recipe::getName() const {
     return name;
 }
 
-QVector<QString> Recipe::getIngredients() const {
+const QVector<QString>& Recipe::getIngredients() const {
     return ingredients;
 }
 
-QVector<QString> Recipe::getInstructions() const {
+const QVector<QString>& Recipe::getInstructions() const {
     return instructions;
 }
 
-Allergen Recipe::getAllergens() const {
+const Allergen& Recipe::getAllergens() const {
     return allergens;
 }
 
-QString Recipe::getDietRestriction() const {
+const QString& Recipe::getDietRestriction() const {
     return dietRestriction;
 }
 
 void Recipe::setName(const QString &newName) {
     name = newName;
+}
+
+const bool Recipe::getDisplayed() const {
+    return displayed;
 }
 
 void Recipe::addIngredient(const QString &ingredient) {
@@ -93,10 +95,6 @@ void Recipe::addAllergen(const QString &allergen) {
 
 void Recipe::setDietRestriction(const QString &newDietRestriction) {
     dietRestriction = newDietRestriction;
-}
-
-bool Recipe::getDisplayed() const {
-    return displayed;
 }
 
 void Recipe::setDisplayed(bool newDisplayed) {

@@ -11,19 +11,21 @@
 #define BROWSE_PAGE 1
 #define RECIPE_PAGE 2
 #define CREATE_PAGE 3
-#define FAVORITES_PAGE 4
 
-RecipeApp::RecipeApp(QWidget *parent): QMainWindow(parent), ui(new Ui::RecipeApp), previousPages(QVector<int>{0}) {
+Allergen allergens;
+QString dietRestriction;
+QString searchText;
+
+RecipeApp::RecipeApp(QWidget *parent) : QMainWindow(parent), ui(new Ui::RecipeApp) {
     ui->setupUi(this);
     ui->stackedWidget->setCurrentIndex(0);
     ui->pageSelectionButtons->setId(ui->browseButton, BROWSE_PAGE);
     ui->pageSelectionButtons->setId(ui->createButton, CREATE_PAGE);
-    ui->pageSelectionButtons->setId(ui->favoritesButton, FAVORITES_PAGE);
-    dietRestriction = ui->dietaryRestrictionButtons->checkedButton()->text();
+    dietRestriction = "All";
     connect(ui->pageSelectionButtons, SIGNAL(idClicked(int)), this, SLOT(pageSelectionButtonClicked(int)));
     connect(ui->backButton, SIGNAL(clicked()), this, SLOT(backButtonClicked()));
-    connect(ui->allergenButtons, SIGNAL(buttonToggled(QAbstractButton*,bool)), this, SLOT(allergenButtonClicked(QAbstractButton*,bool)));
-    connect(ui->dietaryRestrictionButtons, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(dietRestrictionButtonClicked(QAbstractButton*)));
+    connect(ui->allergenButtons, SIGNAL(buttonToggled(QAbstractButton * , bool)), this, SLOT(allergenButtonClicked(QAbstractButton * , bool)));
+    connect(ui->dietaryRestrictionButtons, SIGNAL(buttonClicked(QAbstractButton * )), this, SLOT(dietRestrictionButtonClicked(QAbstractButton * )));
     recipesFile = new QFile("recipes.json");
     recipesFile->open(QIODevice::ReadWrite | QIODevice::Text);
     loadRecipes();
@@ -32,6 +34,7 @@ RecipeApp::RecipeApp(QWidget *parent): QMainWindow(parent), ui(new Ui::RecipeApp
 
 RecipeApp::~RecipeApp() {
     delete ui;
+    delete recipesFile;
 }
 
 void RecipeApp::pageSelectionButtonClicked(int index) {
@@ -40,18 +43,18 @@ void RecipeApp::pageSelectionButtonClicked(int index) {
 }
 
 void RecipeApp::backButtonClicked() {
-    if (!previousPages.empty()) ui->stackedWidget->setCurrentIndex(previousPages.back());
-    previousPages.pop_back();
+    if (!previousPages.empty()) {
+        ui->stackedWidget->setCurrentIndex(previousPages.back());
+        previousPages.pop_back();
+    }
 }
 
-void RecipeApp::recipeButtonClicked() {
-    RecipeButton *recipeButton = qobject_cast<RecipeButton *>(sender());
-    Recipe recipe = recipeButton->getRecipe();
+void RecipeApp::recipeButtonClicked(const Recipe &recipe) {
     ui->recipeNameLabel->setText(recipe.getName());
     ui->allergenLabel->setText(recipe.getAllergens().string());
     ui->dietaryLabel->setText(recipe.getDietRestriction());
 
-    QLayoutItem* item;
+    QLayoutItem *item;
     while (ui->instructionsListLayout->count() > 1) {
         item = ui->instructionsListLayout->takeAt(0);
         delete item->widget();
@@ -64,11 +67,11 @@ void RecipeApp::recipeButtonClicked() {
         delete item;
     }
 
-    QVector<QString> instructions = recipe.getInstructions();
+    QVector <QString> instructions = recipe.getInstructions();
     for (int i = 0; i < instructions.size(); i++) {
         ui->instructionsListLayout->insertWidget(0, new QLabel(instructions[i]));
     }
-    QVector<QString> ingredients = recipe.getIngredients();
+    QVector <QString> ingredients = recipe.getIngredients();
     for (int i = 0; i < ingredients.size(); i++) {
         ui->ingredientsListLayout->insertWidget(0, new QLabel(ingredients[i]));
     }
@@ -77,24 +80,21 @@ void RecipeApp::recipeButtonClicked() {
     ui->stackedWidget->setCurrentIndex(RECIPE_PAGE);
 }
 
-
 void RecipeApp::on_addInstructionButton_clicked() {
     ui->instructionsCreateList->insertWidget(ui->instructionsCreateList->count() - 1, new QLineEdit);
 }
-
 
 void RecipeApp::on_addIngredientButton_clicked() {
     ui->ingredientsCreateList->insertWidget(ui->ingredientsCreateList->count() - 1, new QLineEdit);
 }
 
-
 void RecipeApp::on_createRecipeButton_clicked() {
-    QVector<QString> ingredients;
-    QVector<QString> instructions;
+    QVector <QString> ingredients;
+    QVector <QString> instructions;
     Allergen allergens;
 
-    QLayoutItem* item;
-    while(ui->ingredientsCreateList->count() > 1) {
+    QLayoutItem *item;
+    while (ui->ingredientsCreateList->count() > 1) {
         item = ui->ingredientsCreateList->takeAt(0);
         ingredients.append(qobject_cast<QLineEdit *>(item->widget())->text());
         delete item->widget();
@@ -102,7 +102,7 @@ void RecipeApp::on_createRecipeButton_clicked() {
     }
     ui->ingredientsCreateList->insertWidget(0, new QLineEdit());
 
-    while(ui->instructionsCreateList->count() > 1) {
+    while (ui->instructionsCreateList->count() > 1) {
         item = ui->instructionsCreateList->takeAt(0);
         instructions.append(qobject_cast<QLineEdit *>(item->widget())->text());
         delete item->widget();
@@ -135,13 +135,13 @@ void RecipeApp::loadRecipes() {
         newRecipe.setName(it.key());
         QJsonObject recipe = it.value().toObject();
 
-        for (auto&& ingredient : (recipe.find("Ingredients").value().toArray())) {
+        for (auto &&ingredient: (recipe.find("Ingredients").value().toArray())) {
             newRecipe.addIngredient(ingredient.toString());
         }
-        for (auto&& instruction : recipe.find("Instructions").value().toArray()) {
+        for (auto &&instruction: recipe.find("Instructions").value().toArray()) {
             newRecipe.addInstruction(instruction.toString());
         }
-        for (auto&& allergen : recipe.find("Allergens").value().toArray()) {
+        for (auto &&allergen: recipe.find("Allergens").value().toArray()) {
             newRecipe.addAllergen(allergen.toString());
         }
         newRecipe.setDietRestriction(recipe.find("Dietary Restriction").value().toString());
@@ -152,13 +152,13 @@ void RecipeApp::loadRecipes() {
 
 void RecipeApp::displayRecipes() {
     for (Recipe &recipe: recipes) {
-        if ((dietRestriction == "All"  || dietRestriction == recipe.getDietRestriction()) &&
+        if ((dietRestriction == "All" || dietRestriction == recipe.getDietRestriction()) &&
             (searchText == "" || recipe.getName().contains(searchText, Qt::CaseInsensitive)) &&
             (!allergens.getAllergens().bits || !(allergens.getAllergens().bits & recipe.getAllergens().getAllergens().bits))) {
             if (!recipe.getDisplayed()) {
                 recipe.setDisplayed(true);
                 RecipeButton *recipeButton = new RecipeButton(recipe);
-                connect(recipeButton, SIGNAL(selectRecipeButtonClicked()), this, SLOT(recipeButtonClicked()));
+                connect(recipeButton, SIGNAL(selectRecipeButtonClicked(Recipe)), this, SLOT(recipeButtonClicked(Recipe)));
                 ui->recipeListLayout->insertWidget(0, recipeButton);
             }
 
@@ -189,7 +189,6 @@ void RecipeApp::allergenButtonClicked(QAbstractButton *button, bool checked) {
 }
 
 void RecipeApp::dietRestrictionButtonClicked(QAbstractButton *button) {
-
     dietRestriction = button->text();
     displayRecipes();
 }

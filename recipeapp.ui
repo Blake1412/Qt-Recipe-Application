@@ -48,7 +48,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="homePage">
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -81,16 +81,6 @@
          <widget class="QPushButton" name="createButton">
           <property name="text">
            <string>Create Recipe</string>
-          </property>
-          <attribute name="buttonGroup">
-           <string notr="true">pageSelectionButtons</string>
-          </attribute>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="favoritesButton">
-          <property name="text">
-           <string>Favorites</string>
           </property>
           <attribute name="buttonGroup">
            <string notr="true">pageSelectionButtons</string>
@@ -365,16 +355,6 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="favoritesCheckBox">
-            <property name="layoutDirection">
-             <enum>Qt::RightToLeft</enum>
-            </property>
-            <property name="text">
-             <string>Add to Favorites</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
         <item row="1" column="1">
@@ -393,8 +373,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>40</width>
-             <height>20</height>
+             <width>377</width>
+             <height>390</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -435,8 +415,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>40</width>
-             <height>20</height>
+             <width>377</width>
+             <height>390</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -650,8 +630,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>109</width>
-             <height>93</height>
+             <width>309</width>
+             <height>427</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_20">
@@ -698,8 +678,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>106</width>
-             <height>93</height>
+             <width>309</width>
+             <height>427</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_21">
@@ -751,7 +731,6 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="favoritesPage"/>
      </widget>
     </item>
    </layout>

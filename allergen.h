@@ -1,7 +1,6 @@
 #ifndef ALLERGEN_H
 #define ALLERGEN_H
 
-
 #include <QString>
 #include <cstdint>
 
@@ -24,9 +23,9 @@ class Allergen
 
 public:
     Allergen();
-    AllergenBitStruct getAllergens() const;
-    void addAllergen(const QString allergen);
-    void removeAllergen(const QString allergen);
+    const AllergenBitStruct &getAllergens() const;
+    void addAllergen(const QString& allergen);
+    void removeAllergen(const QString& allergen);
     QString string() const;
 
 private:

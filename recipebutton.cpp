@@ -3,7 +3,7 @@
 
 RecipeButton::RecipeButton(const Recipe &recipe, QWidget *parent): recipe(recipe), QWidget(parent), ui(new Ui::RecipeButton) {
     ui->setupUi(this);
-    connect(ui->selectRecipeButton, SIGNAL(clicked()), this, SIGNAL(selectRecipeButtonClicked()));
+    connect(ui->selectRecipeButton, SIGNAL(clicked()), this, SLOT(selectRecipeButtonClickedSlot()));
     ui->recipeNameLabel->setText(recipe.name);
     ui->allergensLabel->setText(recipe.allergens.string());
     ui->dietaryRestrictionsLabel->setText(recipe.dietRestriction);
@@ -13,7 +13,11 @@ RecipeButton::~RecipeButton() {
     delete ui;
 }
 
-Recipe RecipeButton::getRecipe() const {
+const Recipe& RecipeButton::getRecipe() const {
     return recipe;
+}
+
+void RecipeButton::selectRecipeButtonClickedSlot() {
+    emit selectRecipeButtonClicked(recipe);
 }
 

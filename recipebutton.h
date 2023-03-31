@@ -15,14 +15,17 @@ class RecipeButton : public QWidget {
 public:
     RecipeButton(const Recipe &recipe, QWidget *parent = nullptr);
     ~RecipeButton();
-    Recipe getRecipe() const;
+    const Recipe& getRecipe() const;
 
 private:
     Ui::RecipeButton *ui;
     Recipe recipe;
 
+private slots:
+    void selectRecipeButtonClickedSlot();
+
 signals:
-    void selectRecipeButtonClicked();
+    void selectRecipeButtonClicked(const Recipe& recipe);
 };
 
 

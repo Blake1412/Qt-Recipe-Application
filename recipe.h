@@ -7,34 +7,30 @@
 #include <QVector>
 #include <QVBoxLayout>
 
-using std::ostream;
-
-
 class RecipeButton;
 class Recipe {
 
 public:
     Recipe();
-    Recipe(const QString &name, const QVector<QString> &ingredients, const QVector<QString> &instructions, const QString &dietRestriction);
     Recipe(const QString &name, const QVector<QString> &ingredients, const QVector<QString> &instructions, const Allergen &allergens, const QString &dietRestriction);
 
-    QString getName() const;
-    QVector<QString> getIngredients() const;
-    QVector<QString> getInstructions() const;
-    Allergen getAllergens() const;
-    QString getDietRestriction() const;
-    bool getDisplayed() const;
+    const QString& getName() const;
+    const QVector<QString>& getIngredients() const;
+    const QVector<QString>& getInstructions() const;
+    const Allergen& getAllergens() const;
+    const QString& getDietRestriction() const;
+    const bool getDisplayed() const;
 
     void setName(const QString &newName);
-    void addIngredient(const QString &newIngredients);
-    void addInstruction(const QString &newInstructions);
-    void addAllergen(const QString &newAllergens);
+    void addIngredient(const QString &newIngredient);
+    void addInstruction(const QString &newInstruction);
+    void addAllergen(const QString &newAllergen);
     void setDietRestriction(const QString &newDietRestriction);
     void setDisplayed(bool newDisplayed);
 
     friend QDebug operator<< (QDebug &debug, const Recipe &recipe);
-    friend QJsonObject operator<< (QJsonObject &jsonObject, const Recipe &recipe);
-    bool const operator==(const Recipe &recipe);
+    friend void operator<< (QJsonObject &jsonObject, const Recipe &recipe);
+    const bool operator==(const Recipe &recipe) const;
 
     friend RecipeButton;
 
