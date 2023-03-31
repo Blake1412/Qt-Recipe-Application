@@ -16,6 +16,7 @@
 Allergen allergens;
 QString dietRestriction;
 QString searchText;
+Recipe currentRecipe;
 
 RecipeApp::RecipeApp(QWidget *parent) : QMainWindow(parent), ui(new Ui::RecipeApp) {
     ui->setupUi(this);
@@ -25,8 +26,8 @@ RecipeApp::RecipeApp(QWidget *parent) : QMainWindow(parent), ui(new Ui::RecipeAp
     dietRestriction = "All";
     connect(ui->pageSelectionButtons, SIGNAL(idClicked(int)), this, SLOT(pageSelectionButtonClicked(int)));
     connect(ui->backButton, SIGNAL(clicked()), this, SLOT(backButtonClicked()));
-    connect(ui->allergenButtons, SIGNAL(buttonToggled(QAbstractButton * , bool)), this, SLOT(allergenButtonClicked(QAbstractButton * , bool)));
-    connect(ui->dietaryRestrictionButtons, SIGNAL(buttonClicked(QAbstractButton * )), this, SLOT(dietRestrictionButtonClicked(QAbstractButton * )));
+    connect(ui->allergenButtons, SIGNAL(buttonToggled(QAbstractButton*,bool)), this, SLOT(allergenButtonClicked(QAbstractButton*,bool)));
+    connect(ui->dietaryRestrictionButtons, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(dietRestrictionButtonClicked(QAbstractButton*)));
     recipesFile = new QFile("recipes.json");
     recipesFile->open(QIODevice::ReadWrite | QIODevice::Text);
     loadRecipes();
@@ -51,6 +52,7 @@ void RecipeApp::backButtonClicked() {
 }
 
 void RecipeApp::recipeButtonClicked(const Recipe &recipe) {
+    currentRecipe = recipe;
     ui->recipeNameLabel->setText(recipe.getName());
     ui->allergenLabel->setText(recipe.getAllergens().string());
     ui->dietaryLabel->setText(recipe.getDietRestriction());
@@ -139,6 +141,26 @@ void RecipeApp::addRecipe(const Recipe& recipe) {
     else recipes.append(recipe);
 }
 
+void RecipeApp::deleteRecipe(const Recipe &recipe) {
+    recipes.removeOne(currentRecipe);
+    recipes.squeeze();
+    recipesJson.remove(recipe.getName());
+    deleteRecipeDisplay(recipe);
+    backButtonClicked();
+}
+
+void RecipeApp::deleteRecipeDisplay(const Recipe& recipe) {
+    QVBoxLayout *layout = ui->recipeListLayout;
+    for (int i = 0; i < layout->count() - 1; i++) {
+        if (qobject_cast<RecipeButton *>(layout->itemAt(i)->widget())->getRecipe() == recipe) {
+            QLayoutItem *item = layout->takeAt(i);
+            delete item->widget();
+            delete item;
+            i--;
+        }
+    }
+}
+
 void RecipeApp::loadRecipes() {
     QJsonDocument jsonFile = QJsonDocument::fromJson(recipesFile->readAll());
     recipesJson = jsonFile.object();
@@ -163,7 +185,7 @@ void RecipeApp::loadRecipes() {
 }
 
 void RecipeApp::displayRecipes() {
-    for (auto &recipe: recipes) {
+    for (Recipe &recipe: recipes) {
         if ((dietRestriction == "All" || dietRestriction == recipe.getDietRestriction()) &&
             (searchText == "" || recipe.getName().contains(searchText, Qt::CaseInsensitive)) &&
             (!allergens.getAllergens().bits || !(allergens.getAllergens().bits & recipe.getAllergens().getAllergens().bits))) {
@@ -176,15 +198,7 @@ void RecipeApp::displayRecipes() {
 
         } else {
             recipe.setDisplayed(false);
-            QVBoxLayout *layout = ui->recipeListLayout;
-            for (int i = 0; i < layout->count() - 1; i++) {
-                if (qobject_cast<RecipeButton *>(layout->itemAt(i)->widget())->getRecipe() == recipe) {
-                    QLayoutItem *item = layout->takeAt(i);
-                    delete item->widget();
-                    delete item;
-                    i--;
-                }
-            }
+            deleteRecipeDisplay(recipe);
         }
     }
 }
@@ -203,6 +217,10 @@ void RecipeApp::allergenButtonClicked(QAbstractButton *button, bool checked) {
 void RecipeApp::dietRestrictionButtonClicked(QAbstractButton *button) {
     dietRestriction = button->text();
     displayRecipes();
+}
+
+void RecipeApp::on_deleteRecipeButton_clicked() {
+    deleteRecipe(currentRecipe);
 }
 
 void RecipeApp::closeEvent(QCloseEvent *event) {

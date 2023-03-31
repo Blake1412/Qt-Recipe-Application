@@ -22,6 +22,8 @@ public:
     RecipeApp(QWidget *parent = nullptr);
     ~RecipeApp();
     void addRecipe(const Recipe &recipe);
+    void deleteRecipe(const Recipe &recipe);
+    void deleteRecipeDisplay(const Recipe &recipe);
 
 private slots:
     void pageSelectionButtonClicked(int index);
@@ -33,6 +35,7 @@ private slots:
     void on_searchBar_textEdited(const QString &newText);
     void allergenButtonClicked(QAbstractButton *button, bool checked);
     void dietRestrictionButtonClicked(QAbstractButton *button);
+    void on_deleteRecipeButton_clicked();
 
 private:
     void loadRecipes();

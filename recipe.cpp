@@ -61,7 +61,7 @@ Recipe::Recipe(const Recipe &recipe, Deep): Recipe(recipe) {
 }
 
 Recipe::Recipe(const Recipe &recipe)
-    : name(recipe.name), ingredients(recipe.ingredients), instructions(recipe.instructions), allergens(recipe.allergens), dietRestriction(recipe.dietRestriction) {
+    : name(recipe.name), ingredients(recipe.ingredients), instructions(recipe.instructions), allergens(recipe.allergens), dietRestriction(recipe.dietRestriction), displayed(recipe.getDisplayed()) {
 
 }
 
